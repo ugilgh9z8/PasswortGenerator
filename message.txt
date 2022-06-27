@@ -1,0 +1,144 @@
+<!--
+Erstelle deinen eigenen Passwort-Generator in jQuery.
+
+Die detaillierte Erklärung zum Skript findest du auf Codepalm:
+https://www.codepalm.de/post/einen-passwort-generator-programmieren/
+-->
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<script>
+    (function($) {
+  $( document ).ready( function() {
+    
+    $( '#generate_pw' ).unbind( 'click' );
+    $( '#generate_pw' ).bind( 'click', function() {
+      
+      generate_password();
+      
+    });
+    
+    function generate_password() {
+      
+      var characters = 'abcdefghijklmnopqrstuvwxyz';
+      var special = '|<>#+*~-_!?§$%&/()=@';
+      var numbers = '0123456789';
+      
+      var length = $( '#length' ).val();
+      var special_on = $( '#special_characters' ).prop( 'checked' );
+      var number_on = $( '#number_characters' ).prop( 'checked' );
+      var uppercase_on = $( '#upper_characters' ).prop( 'checked' );
+      var lowercase_on = $( '#low_characters' ).prop( 'checked' );
+      
+      var result = '';
+      if( special_on )
+        for( var i=0; i < Math.ceil( length/8 ); i++ )
+          result += special;
+      
+      if( number_on )
+        for( var i=0; i < Math.ceil( length/5 ); i++ )
+          result += numbers;
+      
+      if( uppercase_on )
+        for( var i=0; i < Math.ceil( length/8 ); i++ )
+          result += characters.toUpperCase();
+      
+      if( lowercase_on )
+        for( var i=0; i < Math.ceil( length/8 ); i++ )
+          result += characters.toLowerCase();
+      
+      result = result.shuffle().slice( 0, length );
+      $( '#pw_output' ).val( result ).select();
+      
+    }
+    
+    // Diese Erweiterung des Strings werden wir später beim Generieren eines Passworts benötigen. Durch die shuffle-Funktion wird ein vorhandener String gemischt
+    String.prototype.shuffle = function() {
+      var chars = this.split( "" );
+      var length = chars.length;
+      
+      for( var i = length-1; i > 0; i-- ) {
+        var j = Math.floor( Math.random() * ( i + 1 ) );
+        var tmp = chars[ i ];
+        chars[ i ] = chars[ j ];
+        chars[ j ] = tmp;
+      }
+      return chars.join( "" );
+    }
+    
+  });
+})(jQuery);
+  </script>
+<style>
+    /* Styles sind optional und können nach belieben angepasst werden */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  text-align: center;
+  background-image: url("no.jpg");
+
+}
+
+input {
+  display: inline-block;
+  font-size: 16px;
+}
+input[type="text"],
+input[type="number"]{
+  padding: 8px;
+  width: 200px;
+}
+input[type="checkbox"] + label {
+  width: 180px;
+  padding-right: 12px;
+  margin: 10px 0;
+  display: inline-block;
+  cursor: pointer;
+  text-align: left;
+}
+
+input[type="button"] {
+  width: 220px;
+  margin-top: 10px;
+  display: inline-block;
+  border: 1px solid #0096ff;
+  background-color: #0096ff;
+  color: #ffffff;
+  padding: 8px 16px;
+  transition: background-color .5s, color .5s;
+}
+input[type="button"]:hover {
+  background-color: transparent;
+  color: #0096ff;
+  cursor: pointer;
+}
+
+
+</style>
+<h1>Passwort-Generator</h1>
+<div id="password_generator">
+  
+  <div>
+    <input type="number" id="length" name="length" value="16" placeholder="Länge des Passworts" />
+  </div>
+  
+  <div>
+    <input type="checkbox" id="low_characters" name="low_characters" checked value="on" /><label for="low_characters">Lowercase Characters</label>
+  </div>
+  <div>
+    <input type="checkbox" id="upper_characters" name="upper_characters" checked value="on" /><label for="upper_characters">Uppercase Characters</label>
+  </div>
+    <input type="checkbox" id="number_characters" name="number_characters" checked value="on" /><label for="number_characters">Numbers</label>
+  <div>
+    <input type="checkbox" id="special_characters" name="special_characters" checked value="on" /><label for="special_characters">Special Characters</label>
+  </div>
+  
+  <div>
+    <input type="text" id="pw_output" name="pw_output" value="" placeholder="Passwort" readonly />
+  </div>
+  <div>
+    <input type="button" id="generate_pw" name="generate_pw" value="Passwort generieren" />
+  </div>
+      
+</div>
